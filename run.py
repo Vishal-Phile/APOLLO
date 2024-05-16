@@ -1,19 +1,3 @@
-import subprocess
-
-def install_opencv():
-    try:
-        subprocess.check_call(["pip", "install", "opencv-python-headless"])
-        print("OpenCV installed successfully!")
-    except subprocess.CalledProcessError as e:
-        print("Error installing OpenCV:", e)
-
-# Call the function to install OpenCV
-install_opencv()
-
-# Now import OpenCV
-import cv2
-
-
 
 import streamlit as st
 import cv2
