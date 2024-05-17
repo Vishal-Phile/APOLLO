@@ -77,13 +77,13 @@ def process_non_blue(image, pixel_to_mm_conversion, print_output=True):
     # Create masks for each color
     lower_ranges = [
         np.array([0, 50, 50]),   # Red
-        np.array([11, 50, 50]),  # Orange
+        np.array([5, 50, 50]),  # Orange
         np.array([20, 100, 100]), # Yellow
         np.array([35, 50, 50])   # Green
     ]
     
     upper_ranges = [
-        np.array([10, 255, 255]), # Red
+        np.array([19, 255, 255]), # Red
         np.array([20, 255, 255]), # Orange
         np.array([60, 255, 255]), # Yellow
         np.array([90, 255, 255])  # Green
@@ -156,8 +156,9 @@ def create_color_lists_within_contours(image, palette, hull):
             if cv2.pointPolygonTest(hull, (x, y), False) >= 0:  # Check if the pixel is within the contour
                 pixel = image[y, x]
                 nearest_color_index = assign_pixel_to_nearest_color(pixel, palette)
-                row_colors[y].append(nearest_color_index)
-                col_colors[x].append(nearest_color_index)
+                if nearest_color_index < len(palette):  # Ensure the color index is within the palette range
+                    row_colors[y].append(nearest_color_index)
+                    col_colors[x].append(nearest_color_index)
 
     return row_colors, col_colors
 
@@ -186,8 +187,9 @@ def plot_combined_variation(data, title, palette, color_names):
             for col_color, col_count in row:
                 if col_color == i:
                     counts[j] += col_count
+        label = color_names[i] if i < len(color_names) else f'Color {i}'
         rgba_color = color / 255.0
-        ax.bar(range(len(combined_data)), counts, color=rgba_color, label=color_names[i])
+        ax.bar(range(len(combined_data)), counts, color=rgba_color, label=label)
 
     ax.set_xlabel('Position')
     ax.set_ylabel('Frequency')
@@ -226,12 +228,6 @@ def main():
                 contour_area = cv2.contourArea(hull)
 
                 st.write(f"The contour area is {contour_area} square pixels.")
-
-                st.subheader("Pixel Counts for Each Color")
-                st.write("Red: ", pixel_counts[0])
-                st.write("Orange: ", pixel_counts[1])
-                st.write("Yellow: ", pixel_counts[2])
-                st.write("Green: ", pixel_counts[3])
 
         elif choice == "Graph":
             if st.sidebar.button('Analyze'):
