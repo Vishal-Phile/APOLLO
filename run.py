@@ -252,8 +252,8 @@ def main():
                 ]
                 
                 # Define color names
-                color_names = ["Crimson", "Tangerine", "Mustard", "Lemon", "Lime", "Chartreuse", 
-                               "Green", "Turquoise", "Aquamarine", "Sky Blue", "Navy", "Indigo"]
+                color_names = ["0.70", "0.64", "0.58", "0.52", "0.47", "0.41", "0.35", "0.29", "0.23", "0.17", "0.12", "0.06", "0.00"]
+
 
                 # Assign each pixel to the nearest color in the palette
                 row_colors, col_colors = create_color_lists_within_contours(image, palette, hull)
