@@ -139,8 +139,11 @@ def process_non_blue(image, pixel_to_mm_conversion, print_output=True):
 
     return original_image, result_image, contour_image, pressure_areas, pixel_counts, hull
 
+
 # Function to assign each pixel to the nearest color from the palette
 def assign_pixel_to_nearest_color(pixel, palette):
+    if all(pixel > 250) or all(pixel < 5):
+        return None
     distances = np.linalg.norm(np.array(palette) - pixel, axis=1)
     nearest_index = np.argmin(distances)
     return nearest_index
@@ -156,7 +159,7 @@ def create_color_lists_within_contours(image, palette, hull):
             if cv2.pointPolygonTest(hull, (x, y), False) >= 0:  # Check if the pixel is within the contour
                 pixel = image[y, x]
                 nearest_color_index = assign_pixel_to_nearest_color(pixel, palette)
-                if nearest_color_index < len(palette):  # Ensure the color index is within the palette range
+                if nearest_color_index is not None and nearest_color_index < len(palette):  # Ensure the color is not black/white and color index is within the palette range
                     row_colors[y].append(nearest_color_index)
                     col_colors[x].append(nearest_color_index)
 
